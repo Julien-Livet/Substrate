@@ -23,6 +23,9 @@ int main(int argc, char *argv[])
     QTranslator translatorBase;
     translatorBase.load(QString(":/Langages/qtbase_") + locale);
     application.installTranslator(&translatorBase);
+    QTranslator translatorSubstrate;
+    translatorSubstrate.load(QString(":/Langages/Substrate_") + locale);
+    application.installTranslator(&translatorSubstrate);
 
     srand(time(NULL));
 
