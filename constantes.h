@@ -1,0 +1,7 @@
+#ifndef CONSTANTES_H
+#define CONSTANTES_H
+
+#define NOMBRE_GENERATEURS  7
+#define NOMBRE_COULEURS     4
+
+#endif // CONSTANTES_H

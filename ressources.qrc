@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/Images">
+        <file>A_propos.png</file>
+        <file>A_propos_de_Qt.png</file>
+        <file>Aide.png</file>
+        <file>Ajouter.png</file>
+        <file>Engrenage.png</file>
+        <file>Enregistrer.png</file>
+        <file>Enregistrer_sous.png</file>
+        <file>Ouvrir.png</file>
+        <file>Palette.png</file>
+        <file>Substrate.png</file>
+        <file>Supprimer.png</file>
+        <file>Quitter.png</file>
+    </qresource>
+    <qresource prefix="/Langages">
+        <file>qt_fr.qm</file>
+        <file>qtbase_fr.qm</file>
+        <file>qt_en.qm</file>
+        <file>qtbase_en.qm</file>
+        <file>Substrate_en.qm</file>
+    </qresource>
+</RCC>
