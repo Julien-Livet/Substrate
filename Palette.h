@@ -1,12 +1,12 @@
 #ifndef PALETTE_H
 #define PALETTE_H
 
-#include <QDialog>
-#include <QTreeWidget>
 #include <QColor>
-#include <QPushButton>
 #include <QDataStream>
+#include <QDialog>
+#include <QPushButton>
 #include <QSpinBox>
+#include <QTreeWidget>
 
 struct Couleur
 {

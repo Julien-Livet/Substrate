@@ -1,16 +1,16 @@
 #ifndef FENETREPRINCIPALE_H
 #define FENETREPRINCIPALE_H
 
-#include <QMainWindow>
-#include <QPrinter>
-#include <QImage>
-#include <QProgressBar>
-#include <QPushButton>
-#include <QSpinBox>
-#include <QDoubleSpinBox>
-#include <QRadioButton>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QDoubleSpinBox>
+#include <QImage>
+#include <QMainWindow>
+#include <QPrinter>
+#include <QProgressBar>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QSpinBox>
 
 #include "FancyLineEdit.h"
 #include "Interpolation.h"

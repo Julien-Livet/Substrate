@@ -1,10 +1,11 @@
 #ifndef INTERPOLATION_H
 #define INTERPOLATION_H
 
+#include <QLineEdit>
 #include <QList>
 #include <QPointF>
 #include <QWidget>
-#include <QLineEdit>
+
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>

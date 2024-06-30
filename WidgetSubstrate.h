@@ -1,8 +1,8 @@
 #ifndef WIDGETSUBSTRATE_H
 #define WIDGETSUBSTRATE_H
 
-#include <QWidget>
 #include <QPointer>
+#include <QWidget>
 
 class Substrate;
 

@@ -31,9 +31,9 @@
 #define FANCYLINEEDIT_H
 
 
+#include <QAbstractButton>
 #include <QLineEdit>
 #include <QPaintEvent>
-#include <QAbstractButton>
 
 
 class FancyLineEditPrivate;

@@ -1,15 +1,15 @@
 #ifndef FENETRECOULEURS_H
 #define FENETRECOULEURS_H
 
-#include <QWidget>
-#include <QTableWidget>
-#include <QDataStream>
-#include <QRadioButton>
 #include <QButtonGroup>
 #include <QCheckBox>
+#include <QDataStream>
+#include <QRadioButton>
+#include <QTableWidget>
+#include <QWidget>
 
-#include "Palette.h"
 #include "Degrade.h"
+#include "Palette.h"
 
 class Substrate;
 class FancyLineEdit;

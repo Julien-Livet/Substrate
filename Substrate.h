@@ -3,21 +3,21 @@
 
 #include <random>
 
-#include <QObject>
-#include <QTimer>
 #include <QColor>
+#include <QObject>
 #include <QImage>
-#include <QStringList>
-#include <QPen>
 #include <QPainter>
 #include <QPicture>
+#include <QPen>
+#include <QStringList>
 #include <QThread>
+#include <QTimer>
 
+#include "constantes.h"
 #include "Crack.h"
+#include "Degrade.h"
 #include "Interpolation.h"
 #include "Palette.h"
-#include "Degrade.h"
-#include "constantes.h"
 
 class Substrate : public QThread
 {

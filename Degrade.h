@@ -3,8 +3,8 @@
 
 #include <QWidget>
 #include <QDialog>
-#include <QTreeWidget>
 #include <QPushButton>
+#include <QTreeWidget>
 
 struct Degrade
 {

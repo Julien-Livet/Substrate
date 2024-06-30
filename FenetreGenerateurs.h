@@ -1,10 +1,10 @@
 #ifndef FENETREGENERATEURS_H
 #define FENETREGENERATEURS_H
 
-#include <QWidget>
-#include <QTableWidget>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QTableWidget>
+#include <QWidget>
 
 class Substrate;
 
