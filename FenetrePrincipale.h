@@ -87,6 +87,7 @@ class FenetrePrincipale : public QMainWindow
         uint compteurSubstrates;
         QString nomFichier;
         int choixSortie;
+        bool bouclageLance;
 
     private slots:
         void montrerFenetreCouleurs();

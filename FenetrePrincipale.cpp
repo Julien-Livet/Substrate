@@ -31,6 +31,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     substrateGenere = 0;
     compteurSubstrates = 0;
     choixSortie = -1;
+    bouclageLance = false;
 
     widgetSubstrate = 0;
     imageSubstrate = 0;
@@ -685,8 +686,10 @@ void FenetrePrincipale::genererAnnuler()
                     }
                     else if (imageSubstrate)
                     {
-                        QTimer::singleShot(spinBoxPeriodeFichier->value(), this, SLOT(rafraichirImage()));
-                        //connect(substrateGenere, SIGNAL(modifie()), this, SLOT(rafraichirImage()));
+                        if (!bouclageLance)
+                            QTimer::singleShot(spinBoxPeriodeFichier->value(), this, SLOT(rafraichirImage()));
+                        else
+                            bouclageLance = true;
                     }
                     else
                     {
@@ -743,6 +746,7 @@ void FenetrePrincipale::genererAnnuler()
             }
         }
         choixSortie = -1;
+        bouclageLance = false;
         boutonGenererAnnuler->setText(tr("Générer"));
         barreDeProgression->setValue(0);
         statusBar()->showMessage(tr("Génération du substrate annulée !"), 5000);
@@ -924,6 +928,6 @@ void FenetrePrincipale::rafraichirImage()
     if (imageSubstrate)
         imageSubstrate->save(fancyLineEditFichier->text(), 0, 100);
 
-    if (boutonGenererAnnuler->text() == tr("Annuler"))
+    if (bouclageLance)
         QTimer::singleShot(spinBoxPeriodeFichier->value(), this, SLOT(rafraichirImage()));
 }
