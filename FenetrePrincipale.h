@@ -71,6 +71,7 @@ class FenetrePrincipale : public QMainWindow
         QCheckBox *checkBoxNumeroIntegre;
         QSpinBox *spinBoxNumero;
         QCheckBox *checkBoxBouclage;
+        QSpinBox *spinBoxPeriodeFichier;
         QRadioButton *radioBoutonImprimante;
         QPushButton *boutonConfigurerImprimante;
         QComboBox *comboBoxResolutionImprimante;

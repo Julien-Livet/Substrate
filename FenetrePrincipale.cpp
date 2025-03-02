@@ -154,6 +154,12 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     spinBoxNumero->setRange(0, QWIDGETSIZE_MAX);
     spinBoxNumero->setValue(1);
     connect(radioBoutonImage, SIGNAL(toggled(bool)), spinBoxNumero, SLOT(setEnabled(bool)));
+    spinBoxPeriodeFichier = new QSpinBox(this);
+    spinBoxPeriodeFichier->setRange(-1, 1000);
+    spinBoxPeriodeFichier->setValue(250);
+    spinBoxPeriodeFichier->setSuffix(tr(" ms"));
+    spinBoxPeriodeFichier->setSpecialValueText(tr("Instantanée"));
+    connect(radioBoutonImage, SIGNAL(toggled(bool)), spinBoxPeriodeFichier, SLOT(setEnabled(bool)));
     checkBoxBouclage = new QCheckBox(tr("Bouclage"), this);
     checkBoxBouclage->setDisabled(true);
     checkBoxBouclage->setChecked(false);
@@ -214,11 +220,11 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     gridLayoutGeneration->addWidget(new QLabel(tr("Longueur :"), this), 0, 0);
     gridLayoutGeneration->addWidget(spinBoxLongueur, 0, 1);
     gridLayoutGeneration->addWidget(new QLabel(tr("Hauteur :"), this), 0, 2);
-    gridLayoutGeneration->addWidget(spinBoxHauteur, 0, 3, 1, 2);
+    gridLayoutGeneration->addWidget(spinBoxHauteur, 0, 3);
     gridLayoutGeneration->addWidget(new QLabel(tr("Facteur d'échelle :"), this), 1, 0);
     gridLayoutGeneration->addWidget(spinBoxFacteurEchelle, 1, 1);
     frame = new QFrame(this);
-    gridLayoutGeneration->addWidget(frame, 2, 0, 1, 5);
+    gridLayoutGeneration->addWidget(frame, 2, 0, 1, 4);
     frame->setFrameShape(QFrame::HLine);
     frame->setFrameShadow(QFrame::Raised);
     gridLayoutGeneration->addWidget(radioBoutonFenetre, 3, 0);
@@ -226,30 +232,34 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     label = new QLabel(tr("Période de croissance :"), this);
     connect(radioBoutonFenetre, SIGNAL(toggled(bool)), label, SLOT(setEnabled(bool)));
     gridLayoutGeneration->addWidget(label, 3, 2);
-    gridLayoutGeneration->addWidget(spinBoxPeriodeCroissance, 3, 3, 1, 2);
+    gridLayoutGeneration->addWidget(spinBoxPeriodeCroissance, 3, 3);
     gridLayoutGeneration->addWidget(radioBoutonImage, 4, 0);
     gridLayoutGeneration->addWidget(fancyLineEditFichier, 4, 1);
     gridLayoutGeneration->addWidget(checkBoxNumeroIntegre, 4, 2);
     gridLayoutGeneration->addWidget(spinBoxNumero, 4, 3);
-    gridLayoutGeneration->addWidget(checkBoxBouclage, 4, 4);
-    gridLayoutGeneration->addWidget(radioBoutonImprimante, 5, 0);
-    gridLayoutGeneration->addWidget(boutonConfigurerImprimante, 5, 1);
+    gridLayoutGeneration->addWidget(checkBoxBouclage, 5, 1);
+    label = new QLabel(tr("Période de fichier :"), this);
+    connect(radioBoutonImage, SIGNAL(toggled(bool)), label, SLOT(setEnabled(bool)));
+    gridLayoutGeneration->addWidget(label, 5, 2);
+    gridLayoutGeneration->addWidget(spinBoxPeriodeFichier, 5, 3);
+    gridLayoutGeneration->addWidget(radioBoutonImprimante, 6, 0);
+    gridLayoutGeneration->addWidget(boutonConfigurerImprimante, 6, 1);
     label = new QLabel(tr("Résolution :"), this);
     label->setDisabled(true);
     connect(radioBoutonImprimante, SIGNAL(toggled(bool)), label, SLOT(setEnabled(bool)));
-    gridLayoutGeneration->addWidget(label, 5, 2);
-    gridLayoutGeneration->addWidget(comboBoxResolutionImprimante, 5, 3, 1, 2);
-    gridLayoutGeneration->addWidget(checkBoxAdaptationFormat, 6, 1, 1, 4);
+    gridLayoutGeneration->addWidget(label, 6, 2);
+    gridLayoutGeneration->addWidget(comboBoxResolutionImprimante, 6, 3);
+    gridLayoutGeneration->addWidget(checkBoxAdaptationFormat, 7, 1, 1, 3);
     frame = new QFrame(this);
     frame->setFrameShape(QFrame::HLine);
     frame->setFrameShadow(QFrame::Raised);
-    gridLayoutGeneration->addWidget(frame, 7, 0, 1, 5);
-    gridLayoutGeneration->addWidget(new QLabel(tr("Priorité du thread :"), this), 8, 0);
-    gridLayoutGeneration->addWidget(comboBoxPrioriteThread, 8, 1);
-    gridLayoutGeneration->addWidget(checkBoxAntialiasingActive, 8, 2);
-    gridLayoutGeneration->addWidget(checkBoxRepassageFinalCracks, 8, 3, 1, 2);
-    gridLayoutGeneration->addWidget(barreDeProgression, 9, 0, 1, 4);
-    gridLayoutGeneration->addWidget(boutonGenererAnnuler, 9, 4);
+    gridLayoutGeneration->addWidget(frame, 8, 0, 1, 4);
+    gridLayoutGeneration->addWidget(new QLabel(tr("Priorité du thread :"), this), 9, 0);
+    gridLayoutGeneration->addWidget(comboBoxPrioriteThread, 9, 1);
+    gridLayoutGeneration->addWidget(checkBoxAntialiasingActive, 9, 2);
+    gridLayoutGeneration->addWidget(checkBoxRepassageFinalCracks, 9, 3);
+    gridLayoutGeneration->addWidget(barreDeProgression, 10, 0, 1, 3);
+    gridLayoutGeneration->addWidget(boutonGenererAnnuler, 10, 3);
     groupBoxGeneration->setLayout(gridLayoutGeneration);
 
     QVBoxLayout *vBoxLayout = new QVBoxLayout;
@@ -650,7 +660,8 @@ void FenetrePrincipale::genererAnnuler()
                     }
                     else if (imageSubstrate)
                     {
-                        connect(substrateGenere, SIGNAL(modifie()), this, SLOT(rafraichirImage()));
+                        QTimer::singleShot(spinBoxPeriodeFichier->value(), this, SLOT(rafraichirImage()));
+                        //connect(substrateGenere, SIGNAL(modifie()), this, SLOT(rafraichirImage()));
                         connect(substrateGenere, SIGNAL(arrete()), this, SLOT(finGenerationImage()));
                         connect(substrateGenere, SIGNAL(termine()), this, SLOT(finGenerationImage()));
                     }
@@ -885,6 +896,9 @@ void FenetrePrincipale::afficherMessageRemplissage()
 void FenetrePrincipale::rafraichirImage()
 {
     imageSubstrate->save(fancyLineEditFichier->text(), 0, 100);
+
+    if (boutonGenererAnnuler->text() == tr("Annuler"))
+        QTimer::singleShot(spinBoxPeriodeFichier->value(), this, SLOT(rafraichirImage()));
 }
 
 void FenetrePrincipale::finGenerationImage()
