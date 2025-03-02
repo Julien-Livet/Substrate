@@ -687,9 +687,10 @@ void FenetrePrincipale::genererAnnuler()
                     else if (imageSubstrate)
                     {
                         if (!bouclageLance)
+                        {
                             QTimer::singleShot(spinBoxPeriodeFichier->value(), this, SLOT(rafraichirImage()));
-                        else
                             bouclageLance = true;
+                        }
                     }
                     else
                     {
