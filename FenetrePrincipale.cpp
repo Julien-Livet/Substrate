@@ -302,7 +302,26 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     setWindowTitle(tr("Substrate"));
     setWindowIcon(QIcon(":/Images/Substrate.png"));
 
-    chargerFichier("Substrate.conf");
+    QString fichier("Substrate.conf");
+
+    if (qApp->arguments().contains("-f") || qApp->arguments().contains("--file"))
+    {
+        {
+            int const index{qApp->arguments().indexOf("-f")};
+
+            if (index != -1 && index + 1 < qApp->arguments().size())
+                fichier = qApp->arguments()[index + 1];
+        }
+
+        {
+            int const index{qApp->arguments().indexOf("--file")};
+
+            if (index != -1 && index + 1 < qApp->arguments().size())
+                fichier = qApp->arguments()[index + 1];
+        }
+    }
+
+    chargerFichier(fichier);
     nomFichier.clear();
 
     show();
@@ -662,8 +681,6 @@ void FenetrePrincipale::genererAnnuler()
                     {
                         QTimer::singleShot(spinBoxPeriodeFichier->value(), this, SLOT(rafraichirImage()));
                         //connect(substrateGenere, SIGNAL(modifie()), this, SLOT(rafraichirImage()));
-                        connect(substrateGenere, SIGNAL(arrete()), this, SLOT(finGenerationImage()));
-                        connect(substrateGenere, SIGNAL(termine()), this, SLOT(finGenerationImage()));
                     }
                     else
                     {
@@ -814,6 +831,9 @@ void FenetrePrincipale::substrateTermine()
     barreDeProgression->setValue(0);
     boutonGenererAnnuler->setText(tr("Générer"));
     statusBar()->showMessage(tr("Génération du substrate terminée !"), 5000);
+
+    if (checkBoxBouclage->isChecked())
+        boutonGenererAnnuler->click();
 }
 
 void FenetrePrincipale::configurerImprimante()
@@ -895,14 +915,9 @@ void FenetrePrincipale::afficherMessageRemplissage()
 
 void FenetrePrincipale::rafraichirImage()
 {
-    imageSubstrate->save(fancyLineEditFichier->text(), 0, 100);
+    if (imageSubstrate)
+        imageSubstrate->save(fancyLineEditFichier->text(), 0, 100);
 
     if (boutonGenererAnnuler->text() == tr("Annuler"))
         QTimer::singleShot(spinBoxPeriodeFichier->value(), this, SLOT(rafraichirImage()));
-}
-
-void FenetrePrincipale::finGenerationImage()
-{
-    if (checkBoxBouclage->isChecked())
-        boutonGenererAnnuler->click();
 }

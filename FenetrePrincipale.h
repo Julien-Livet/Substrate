@@ -99,7 +99,6 @@ class FenetrePrincipale : public QMainWindow
         void nombreCracksFinalChange(int v);
         void afficherMessageRemplissage();
         void rafraichirImage();
-        void finGenerationImage();
 
     protected:
         void closeEvent(QCloseEvent *event);
