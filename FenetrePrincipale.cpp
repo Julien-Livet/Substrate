@@ -156,7 +156,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     connect(radioBoutonImage, SIGNAL(toggled(bool)), spinBoxNumero, SLOT(setEnabled(bool)));
     spinBoxPeriodeFichier = new QSpinBox(this);
     spinBoxPeriodeFichier->setRange(-1, 1000);
-    spinBoxPeriodeFichier->setValue(250);
+    spinBoxPeriodeFichier->setValue(200);
     spinBoxPeriodeFichier->setSuffix(tr(" ms"));
     spinBoxPeriodeFichier->setSpecialValueText(tr("Instantanée"));
     connect(radioBoutonImage, SIGNAL(toggled(bool)), spinBoxPeriodeFichier, SLOT(setEnabled(bool)));
@@ -445,6 +445,8 @@ void FenetrePrincipale::enregistrer(QDataStream &out) const
     out << comboBoxPrioriteThread->currentIndex();
     out << checkBoxAntialiasingActive->isChecked();
     out << checkBoxRepassageFinalCracks->isChecked();
+    out << spinBoxPeriodeFichier->value();
+    out << checkBoxBouclage->isChecked();
 }
 
 void FenetrePrincipale::charger(QDataStream &in)
@@ -510,6 +512,10 @@ void FenetrePrincipale::charger(QDataStream &in)
     checkBoxAntialiasingActive->setChecked(b);
     in >> b;
     checkBoxRepassageFinalCracks->setChecked(b);
+    in >> entier;
+    spinBoxPeriodeFichier->setValue(entier);
+    in >> b;
+    checkBoxBouclage->setChecked(b);
 }
 
 void FenetrePrincipale::montrerFenetreCouleurs()
