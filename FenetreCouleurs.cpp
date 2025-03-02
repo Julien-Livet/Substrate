@@ -1,16 +1,17 @@
-#include <QDialogButtonBox>
-#include <QVBoxLayout>
-#include <QFileDialog>
-#include <QPushButton>
-#include <QHeaderView>
-#include <QFrame>
-#include <QSpinBox>
 #include <QApplication>
+#include <QDialogButtonBox>
+#include <QFileDialog>
+#include <QFrame>
+#include <QHeaderView>
+#include <QPushButton>
+#include <QScreen>
+#include <QSpinBox>
+#include <QVBoxLayout>
 
+#include "constantes.h"
+#include "FancyLineEdit.h"
 #include "FenetreCouleurs.h"
 #include "Substrate.h"
-#include "FancyLineEdit.h"
-#include "constantes.h"
 
 FenetreCouleurs::FenetreCouleurs(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 {

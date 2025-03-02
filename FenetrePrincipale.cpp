@@ -1,22 +1,23 @@
 #include <QApplication>
-#include <QGroupBox>
 #include <QButtonGroup>
 #include <QDialogButtonBox>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QFrame>
 #include <QGridLayout>
+#include <QGroupBox>
 #include <QLabel>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QPageSetupDialog>
 #include <QPrintDialog>
+#include <QScreen>
 #include <QStatusBar>
 #include <QVBoxLayout>
 
+#include "FenetreCouleurs.h"
 #include "FenetreGenerateurs.h"
 #include "FenetrePrincipale.h"
-#include "FenetreCouleurs.h"
 #include "Substrate.h"
 #include "WidgetSubstrate.h"
 
@@ -134,7 +135,6 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     spinBoxPeriodeCroissance->setSuffix(tr(" ms"));
     spinBoxPeriodeCroissance->setSpecialValueText(tr("Instantanée"));
     connect(radioBoutonFenetre, SIGNAL(toggled(bool)), checkBoxPleinEcran, SLOT(setEnabled(bool)));
-    connect(radioBoutonFenetre, SIGNAL(toggled(bool)), spinBoxPeriodeCroissance, SLOT(setEnabled(bool)));
 
     radioBoutonImage = new QRadioButton(tr("Image :"), this);
     fancyLineEditFichier = new FancyLineEdit(QString("Substrate.png"), this);
@@ -154,6 +154,10 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     spinBoxNumero->setRange(0, QWIDGETSIZE_MAX);
     spinBoxNumero->setValue(1);
     connect(radioBoutonImage, SIGNAL(toggled(bool)), spinBoxNumero, SLOT(setEnabled(bool)));
+    checkBoxBouclage = new QCheckBox(tr("Bouclage"), this);
+    checkBoxBouclage->setDisabled(true);
+    checkBoxBouclage->setChecked(false);
+    connect(radioBoutonImage, SIGNAL(toggled(bool)), checkBoxBouclage, SLOT(setEnabled(bool)));
 
     radioBoutonImprimante = new QRadioButton(tr("Imprimante :"), this);
     boutonConfigurerImprimante = new QPushButton(tr("Configurer"));
@@ -198,6 +202,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     barreDeProgression->setTextVisible(true);
     boutonGenererAnnuler = new QPushButton(tr("Générer"), this);
     connect(boutonGenererAnnuler, SIGNAL(clicked()), this, SLOT(genererAnnuler()));
+    connect(radioBoutonImprimante, SIGNAL(toggled(bool)), spinBoxPeriodeCroissance, SLOT(setDisabled(bool)));
 
     buttonGroup = new QButtonGroup(this);
     buttonGroup->addButton(radioBoutonFenetre);
@@ -209,11 +214,11 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     gridLayoutGeneration->addWidget(new QLabel(tr("Longueur :"), this), 0, 0);
     gridLayoutGeneration->addWidget(spinBoxLongueur, 0, 1);
     gridLayoutGeneration->addWidget(new QLabel(tr("Hauteur :"), this), 0, 2);
-    gridLayoutGeneration->addWidget(spinBoxHauteur, 0, 3);
+    gridLayoutGeneration->addWidget(spinBoxHauteur, 0, 3, 1, 2);
     gridLayoutGeneration->addWidget(new QLabel(tr("Facteur d'échelle :"), this), 1, 0);
     gridLayoutGeneration->addWidget(spinBoxFacteurEchelle, 1, 1);
     frame = new QFrame(this);
-    gridLayoutGeneration->addWidget(frame, 2, 0, 1, 4);
+    gridLayoutGeneration->addWidget(frame, 2, 0, 1, 5);
     frame->setFrameShape(QFrame::HLine);
     frame->setFrameShadow(QFrame::Raised);
     gridLayoutGeneration->addWidget(radioBoutonFenetre, 3, 0);
@@ -221,29 +226,30 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     label = new QLabel(tr("Période de croissance :"), this);
     connect(radioBoutonFenetre, SIGNAL(toggled(bool)), label, SLOT(setEnabled(bool)));
     gridLayoutGeneration->addWidget(label, 3, 2);
-    gridLayoutGeneration->addWidget(spinBoxPeriodeCroissance, 3, 3);
+    gridLayoutGeneration->addWidget(spinBoxPeriodeCroissance, 3, 3, 1, 2);
     gridLayoutGeneration->addWidget(radioBoutonImage, 4, 0);
     gridLayoutGeneration->addWidget(fancyLineEditFichier, 4, 1);
     gridLayoutGeneration->addWidget(checkBoxNumeroIntegre, 4, 2);
     gridLayoutGeneration->addWidget(spinBoxNumero, 4, 3);
+    gridLayoutGeneration->addWidget(checkBoxBouclage, 4, 4);
     gridLayoutGeneration->addWidget(radioBoutonImprimante, 5, 0);
     gridLayoutGeneration->addWidget(boutonConfigurerImprimante, 5, 1);
     label = new QLabel(tr("Résolution :"), this);
     label->setDisabled(true);
     connect(radioBoutonImprimante, SIGNAL(toggled(bool)), label, SLOT(setEnabled(bool)));
     gridLayoutGeneration->addWidget(label, 5, 2);
-    gridLayoutGeneration->addWidget(comboBoxResolutionImprimante, 5, 3);
-    gridLayoutGeneration->addWidget(checkBoxAdaptationFormat, 6, 1, 1, 3);
+    gridLayoutGeneration->addWidget(comboBoxResolutionImprimante, 5, 3, 1, 2);
+    gridLayoutGeneration->addWidget(checkBoxAdaptationFormat, 6, 1, 1, 4);
     frame = new QFrame(this);
     frame->setFrameShape(QFrame::HLine);
     frame->setFrameShadow(QFrame::Raised);
-    gridLayoutGeneration->addWidget(frame, 7, 0, 1, 4);
+    gridLayoutGeneration->addWidget(frame, 7, 0, 1, 5);
     gridLayoutGeneration->addWidget(new QLabel(tr("Priorité du thread :"), this), 8, 0);
     gridLayoutGeneration->addWidget(comboBoxPrioriteThread, 8, 1);
     gridLayoutGeneration->addWidget(checkBoxAntialiasingActive, 8, 2);
-    gridLayoutGeneration->addWidget(checkBoxRepassageFinalCracks, 8, 3);
-    gridLayoutGeneration->addWidget(barreDeProgression, 9, 0, 1, 3);
-    gridLayoutGeneration->addWidget(boutonGenererAnnuler, 9, 3);
+    gridLayoutGeneration->addWidget(checkBoxRepassageFinalCracks, 8, 3, 1, 2);
+    gridLayoutGeneration->addWidget(barreDeProgression, 9, 0, 1, 4);
+    gridLayoutGeneration->addWidget(boutonGenererAnnuler, 9, 4);
     groupBoxGeneration->setLayout(gridLayoutGeneration);
 
     QVBoxLayout *vBoxLayout = new QVBoxLayout;
@@ -296,6 +302,15 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     move(p);
 
     statusBar()->showMessage(tr("Bienvenue dans Substrate !"), 5000);
+
+    if (qApp->arguments().contains("-g") || qApp->arguments().contains("--generate"))
+        boutonGenererAnnuler->click();
+
+    if (qApp->arguments().contains("-m") || qApp->arguments().contains("--minimized"))
+        showMinimized();
+
+    if (qApp->arguments().contains("-h") || qApp->arguments().contains("--hidden"))
+        hide();
 }
 
 FenetrePrincipale::~FenetrePrincipale()
@@ -533,6 +548,7 @@ void FenetrePrincipale::genererAnnuler()
         else if (radioBoutonImage->isChecked())
         {
             choixSortie = 1;
+            periode = spinBoxPeriodeCroissance->value();
             if (fancyLineEditFichier->text().isEmpty())
             {
                 generationOk = false;
@@ -611,28 +627,40 @@ void FenetrePrincipale::genererAnnuler()
         {
             boutonGenererAnnuler->setText(tr("Annuler"));
             Substrate *s = 0;
-            if (widgetSubstrate)
+            if (widgetSubstrate || imageSubstrate)
             {
                 disconnect(substrateGenere, SIGNAL(arrete()), substrateGenere, SLOT(deleteLater()));
                 if (periode >= 0)
                 {
-                    if (checkBoxPleinEcran->isChecked())
-                        widgetSubstrate->showFullScreen();
+                    if (widgetSubstrate)
+                    {
+                        if (checkBoxPleinEcran->isChecked())
+                            widgetSubstrate->showFullScreen();
+                        else
+                        {
+                            widgetSubstrate->show();
+                            auto p{QGuiApplication::screenAt(pos())->geometry().center() - widgetSubstrate->rect().center()};
+                            p.ry() -= 40;
+                            widgetSubstrate->move(p);
+                        }
+                        disconnect(substrateGenere, SIGNAL(chargementChange(int)), barreDeProgression, SLOT(setValue(int)));
+                        disconnect(substrateGenere, SIGNAL(termine()), this, SLOT(substrateTermine()));
+                        disconnect(substrateGenere, SIGNAL(debutRemplissageZones()), this, SLOT(afficherMessageRemplissage()));
+                        connect(substrateGenere, SIGNAL(modifie()), widgetSubstrate, SLOT(update()));
+                    }
+                    else if (imageSubstrate)
+                    {
+                        connect(substrateGenere, SIGNAL(modifie()), this, SLOT(rafraichirImage()));
+                        connect(substrateGenere, SIGNAL(arrete()), this, SLOT(finGenerationImage()));
+                        connect(substrateGenere, SIGNAL(termine()), this, SLOT(finGenerationImage()));
+                    }
                     else
                     {
-                        widgetSubstrate->show();
-                        auto p{QGuiApplication::screenAt(pos())->geometry().center() - widgetSubstrate->rect().center()};
-                        p.ry() -= 40;
-                        widgetSubstrate->move(p);
+                        boutonGenererAnnuler->setText(tr("Générer"));
+                        widgetSubstrate->setWindowTitle(tr("Substrate n°")+QString::number(compteurSubstrates));
+                        widgetSubstrate = 0;
+                        s = substrateGenere;
                     }
-                    disconnect(substrateGenere, SIGNAL(chargementChange(int)), barreDeProgression, SLOT(setValue(int)));
-                    disconnect(substrateGenere, SIGNAL(termine()), this, SLOT(substrateTermine()));
-                    disconnect(substrateGenere, SIGNAL(debutRemplissageZones()), this, SLOT(afficherMessageRemplissage()));
-                    connect(substrateGenere, SIGNAL(modifie()), widgetSubstrate, SLOT(update()));
-                    boutonGenererAnnuler->setText(tr("Générer"));
-                    widgetSubstrate->setWindowTitle(tr("Substrate n°")+QString::number(compteurSubstrates));
-                    widgetSubstrate = 0;
-                    s = substrateGenere;
                 }
             }
             statusBar()->showMessage(tr("Génération du substrate en cours... (%1x%2 : %3)").arg(longueur)
@@ -852,4 +880,15 @@ void FenetrePrincipale::aPropos()
 void FenetrePrincipale::afficherMessageRemplissage()
 {
     statusBar()->showMessage(tr("Remplissage des zones du substrate en cours..."));
+}
+
+void FenetrePrincipale::rafraichirImage()
+{
+    imageSubstrate->save(fancyLineEditFichier->text(), 0, 100);
+}
+
+void FenetrePrincipale::finGenerationImage()
+{
+    if (checkBoxBouclage->isChecked())
+        boutonGenererAnnuler->click();
 }

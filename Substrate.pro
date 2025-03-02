@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui
+QT += core gui svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
@@ -28,7 +28,8 @@ CONFIG += qwt
 DEFINES += QWT_DLL
 
 win32:INCLUDEPATH += D:/Programmes/qwt-6.3.0/src D:/Programmes/eigen-master
-unix:INCLUDEPATH += /usr/local/qwt-6.3.0-dev/include
+unix:INCLUDEPATH += /usr/local/qwt-6.3.0-dev/include \
+                    /usr/include/eigen3
 
 win32:TR_EXCLUDE += D:/Programmes/eigen-master/*
 

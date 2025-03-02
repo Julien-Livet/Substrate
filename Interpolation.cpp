@@ -10,9 +10,10 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QToolTip>
+#include <QScreen>
 
-#include <qwt_symbol.h>
 #include <qwt_plot_canvas.h>
+#include <qwt_symbol.h>
 
 #include <Eigen/Dense>
 

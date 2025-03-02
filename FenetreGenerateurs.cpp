@@ -1,13 +1,14 @@
 #include <QApplication>
-#include <QGridLayout>
 #include <QDialogButtonBox>
+#include <QGridLayout>
 #include <QHeaderView>
 #include <QRegularExpressionValidator>
+#include <QScreen>
 
+#include "constantes.h"
+#include "FancyLineEdit.h"
 #include "FenetreGenerateurs.h"
 #include "Substrate.h"
-#include "FancyLineEdit.h"
-#include "constantes.h"
 
 FenetreGenerateurs::FenetreGenerateurs(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 {

@@ -70,6 +70,7 @@ class FenetrePrincipale : public QMainWindow
         FancyLineEdit *fancyLineEditFichier;
         QCheckBox *checkBoxNumeroIntegre;
         QSpinBox *spinBoxNumero;
+        QCheckBox *checkBoxBouclage;
         QRadioButton *radioBoutonImprimante;
         QPushButton *boutonConfigurerImprimante;
         QComboBox *comboBoxResolutionImprimante;
@@ -96,6 +97,8 @@ class FenetrePrincipale : public QMainWindow
         void nombreCracksInitialChange(int v);
         void nombreCracksFinalChange(int v);
         void afficherMessageRemplissage();
+        void rafraichirImage();
+        void finGenerationImage();
 
     protected:
         void closeEvent(QCloseEvent *event);
