@@ -601,15 +601,17 @@ void FenetrePrincipale::genererAnnuler()
                     h *= facteurEchelle;
                 }
                 imageSubstrate = new QImage(QSize(l, h), QImage::Format_ARGB32);
-                if (fancyLineEditFichier->text().toLower().endsWith(".avi"))
+                if (fancyLineEditFichier->text().toLower().endsWith(".avi")
+                    || fancyLineEditFichier->text().toLower().endsWith(".mp4"))
                 {
                     double fps(spinBoxPeriodeFichier->value());
                     if (fps < 1)
                         fps = 1;
                     fps = 1000.0 / fps;
-                    //int const fourcc{cv::VideoWriter::fourcc('M', 'J', 'P', 'G')};
+                    int fourcc{cv::VideoWriter::fourcc('M', 'J', 'P', 'G')};
                     //int const fourcc{cv::VideoWriter::fourcc('F', 'M', 'P', '4')};
-                    int const fourcc{cv::VideoWriter::fourcc('m', 'p', '4', 'v')};
+                    if (fancyLineEditFichier->text().toLower().endsWith(".mp4"))
+                        fourcc = cv::VideoWriter::fourcc('m', 'p', '4', 'v');
                     videoWriter = new cv::VideoWriter(fancyLineEditFichier->text().toStdString(),
                                                       fourcc, fps,
                                                       cv::Size(h, l));
@@ -796,7 +798,7 @@ void FenetrePrincipale::parcourirFichierImage()
 {
     QString texte = QFileDialog::getSaveFileName(this, tr("Choisir un fichier de destination"),
                                                  fancyLineEditFichier->text(),
-                                                 tr("Images (*.avi *.bmp *.jpeg *.jpg *.png *.tiff)"));
+                                                 tr("Images (*.avi *.bmp *.jpeg *.jpg *.mp4 *.png *.tiff)"));
 
     if (!texte.isNull())
         fancyLineEditFichier->setText(texte);
