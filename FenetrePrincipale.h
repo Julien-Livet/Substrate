@@ -12,15 +12,17 @@
 #include <QRadioButton>
 #include <QSpinBox>
 
+#include <opencv2/opencv.hpp>
+
 #include "FancyLineEdit.h"
 #include "Interpolation.h"
 
 #define VERSION QString("2.0")
 
-class Substrate;
-class WidgetSubstrate;
 class FenetreCouleurs;
 class FenetreGenerateurs;
+class Substrate;
+class WidgetSubstrate;
 
 class FenetrePrincipale : public QMainWindow
 {
@@ -88,6 +90,7 @@ class FenetrePrincipale : public QMainWindow
         QString nomFichier;
         int choixSortie;
         bool bouclageLance;
+        cv::VideoWriter* videoWriter;
 
     private slots:
         void montrerFenetreCouleurs();

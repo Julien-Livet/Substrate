@@ -597,10 +597,23 @@ void FenetrePrincipale::genererAnnuler()
                 int l = longueur, h = hauteur;
                 if (!fenetreCouleurs->getTailleAdapteeImage())
                 {
-                    l = longueur*facteurEchelle;
-                    h = hauteur*facteurEchelle;
+                    l *= facteurEchelle;
+                    h *= facteurEchelle;
                 }
                 imageSubstrate = new QImage(QSize(l, h), QImage::Format_ARGB32);
+                if (fancyLineEditFichier->text().toLower().endsWith(".avi"))
+                {
+                    double fps(spinBoxPeriodeFichier->value());
+                    if (fps < 1)
+                        fps = 1;
+                    fps = 1000.0 / fps;
+                    //int const fourcc{cv::VideoWriter::fourcc('M', 'J', 'P', 'G')};
+                    //int const fourcc{cv::VideoWriter::fourcc('F', 'M', 'P', '4')};
+                    int const fourcc{cv::VideoWriter::fourcc('m', 'p', '4', 'v')};
+                    videoWriter = new cv::VideoWriter(fancyLineEditFichier->text().toStdString(),
+                                                      fourcc, fps,
+                                                      cv::Size(h, l));
+                }
                 if (!imageSubstrate->isNull())
                 {
                     imageSubstrate->fill(QColor(0, 0, 0, 0));
@@ -738,13 +751,16 @@ void FenetrePrincipale::genererAnnuler()
             delete substrateGenere;
             substrateGenere = 0;
         }
-        if (choixSortie == 2)//Imprimante
+        if (imageSubstrate)
         {
-            if (imageSubstrate)
-            {
-                delete imageSubstrate;
-                imageSubstrate = 0;
-            }
+            delete imageSubstrate;
+            imageSubstrate = 0;
+        }
+        if (videoWriter)
+        {
+            videoWriter->release();
+            delete videoWriter;
+            videoWriter = 0;
         }
         choixSortie = -1;
         bouclageLance = false;
@@ -780,7 +796,7 @@ void FenetrePrincipale::parcourirFichierImage()
 {
     QString texte = QFileDialog::getSaveFileName(this, tr("Choisir un fichier de destination"),
                                                  fancyLineEditFichier->text(),
-                                                 tr("Images (*.bmp *.jpeg *.jpg *.png *.tiff)"));
+                                                 tr("Images (*.avi *.bmp *.jpeg *.jpg *.png *.tiff)"));
 
     if (!texte.isNull())
         fancyLineEditFichier->setText(texte);
@@ -811,15 +827,24 @@ void FenetrePrincipale::substrateTermine()
     }
     else if (choixSortie == 1)//Image
     {
-        auto s{fancyLineEditFichier->text()};
-        if (checkBoxNumeroIntegre->isChecked())
+        if (videoWriter)
         {
-            QFileInfo f(s);
-            s = tr("%1/%2 n°%3.%4").arg(f.absolutePath()).arg(f.baseName())
-                                   .arg(spinBoxNumero->value()).arg(f.completeSuffix());
-            spinBoxNumero->setValue(spinBoxNumero->value()+1);
+            videoWriter->release();
+            delete videoWriter;
+            videoWriter = 0;
         }
-        imageSubstrate->save(s, 0, 100);
+        else
+        {
+            auto s{fancyLineEditFichier->text()};
+            if (checkBoxNumeroIntegre->isChecked())
+            {
+                QFileInfo f(s);
+                s = tr("%1/%2 n°%3.%4").arg(f.absolutePath()).arg(f.baseName())
+                                       .arg(spinBoxNumero->value()).arg(f.completeSuffix());
+                spinBoxNumero->setValue(spinBoxNumero->value()+1);
+            }
+            imageSubstrate->save(s, 0, 100);
+        }
         delete imageSubstrate;
         imageSubstrate = 0;
     }
@@ -927,7 +952,12 @@ void FenetrePrincipale::afficherMessageRemplissage()
 void FenetrePrincipale::rafraichirImage()
 {
     if (imageSubstrate)
-        imageSubstrate->save(fancyLineEditFichier->text(), 0, 100);
+    {
+        if (videoWriter)
+            videoWriter->write(cv::Mat(imageSubstrate->height(), imageSubstrate->width(), CV_8UC4, const_cast<uchar*>(imageSubstrate->bits()), imageSubstrate->bytesPerLine()));
+        else
+            imageSubstrate->save(fancyLineEditFichier->text(), 0, 100);
+    }
 
     if (bouclageLance)
         QTimer::singleShot(spinBoxPeriodeFichier->value(), this, SLOT(rafraichirImage()));

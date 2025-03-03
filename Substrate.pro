@@ -33,8 +33,8 @@ unix:INCLUDEPATH += /usr/local/qwt-6.3.0-dev/include \
 
 win32:TR_EXCLUDE += D:/Programmes/eigen-master/*
 
-win32:LIBS += -L'D:/Programmes/qwt-6.3.0/build/Desktop_Qt_6_7_0_MinGW_64_bit-Release/lib' -lqwt
-unix:LIBS += -L'/usr/local/qwt-6.3.0-dev/lib' -lqwt
+win32:LIBS += -L'D:/Programmes/qwt-6.3.0/build/Desktop_Qt_6_7_0_MinGW_64_bit-Release/lib' -lqwt -lopencv_core -lopencv_videoio
+unix:LIBS += -L'/usr/local/qwt-6.3.0-dev/lib' -lqwt -lopencv_core -lopencv_videoio
 
 SOURCES += Crack.cpp \
         Degrade.cpp \
