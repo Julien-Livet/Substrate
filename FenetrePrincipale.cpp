@@ -35,6 +35,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
 
     widgetSubstrate = 0;
     imageSubstrate = 0;
+    videoWriter = 0;
     printerSubstrate = new QPrinter;
     nomFichier = QString("Substrate.conf");
 
@@ -144,6 +145,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     fancyLineEditFichier->setAutoHideIcon(false);
     fancyLineEditFichier->iconButton()->setToolTip(tr("Parcourir"));
     fancyLineEditFichier->disconnect();
+    fancyLineEditFichier->setToolTip("*.avi *.bmp *.jpeg *.jpg *.mp4 *.png *.tiff");
     connect(fancyLineEditFichier, SIGNAL(buttonClicked()), this, SLOT(parcourirFichierImage()));
     connect(radioBoutonImage, SIGNAL(toggled(bool)), fancyLineEditFichier, SLOT(setEnabled(bool)));
     checkBoxNumeroIntegre = new QCheckBox(tr("Numéro intégré :"), this);
