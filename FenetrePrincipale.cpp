@@ -610,9 +610,9 @@ void FenetrePrincipale::genererAnnuler()
                     if (fps < 1)
                         fps = 1;
                     fps = 1000.0 / fps;
-                    //int fourcc{cv::VideoWriter::fourcc('M', 'J', 'P', 'G')};
+                    int fourcc{cv::VideoWriter::fourcc('M', 'J', 'P', 'G')};
                     //int fourcc{cv::VideoWriter::fourcc('F', 'M', 'P', '4')};
-                    int fourcc{cv::VideoWriter::fourcc('D', 'I', 'V', 'X')};
+                    //int fourcc{cv::VideoWriter::fourcc('D', 'I', 'V', 'X')};
                     if (fancyLineEditFichier->text().toLower().endsWith(".mp4"))
                         fourcc = cv::VideoWriter::fourcc('m', 'p', '4', 'v');
                     videoWriter = new cv::VideoWriter(fancyLineEditFichier->text().toStdString(),
