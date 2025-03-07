@@ -36,6 +36,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     widgetSubstrate = 0;
     imageSubstrate = 0;
     videoWriter = 0;
+    gifImage = 0;
     printerSubstrate = new QPrinter;
     nomFichier = QString("Substrate.conf");
 
@@ -145,7 +146,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent, Qt::WindowFlags f) : QMain
     fancyLineEditFichier->setAutoHideIcon(false);
     fancyLineEditFichier->iconButton()->setToolTip(tr("Parcourir"));
     fancyLineEditFichier->disconnect();
-    fancyLineEditFichier->setToolTip("*.avi *.bmp *.jpeg *.jpg *.mp4 *.png *.tiff");
+    fancyLineEditFichier->setToolTip("*.avi *.bmp *.gif *.jpeg *.jpg *.mp4 *.png *.tiff");
     connect(fancyLineEditFichier, SIGNAL(buttonClicked()), this, SLOT(parcourirFichierImage()));
     connect(radioBoutonImage, SIGNAL(toggled(bool)), fancyLineEditFichier, SLOT(setEnabled(bool)));
     checkBoxNumeroIntegre = new QCheckBox(tr("Numéro intégré :"), this);
@@ -603,7 +604,9 @@ void FenetrePrincipale::genererAnnuler()
                     h *= facteurEchelle;
                 }
                 imageSubstrate = new QImage(QSize(l, h), QImage::Format_ARGB32);
-                if (fancyLineEditFichier->text().toLower().endsWith(".avi")
+                if (fancyLineEditFichier->text().toLower().endsWith(".gif"))
+                    gifImage = new QGifImage(imageSubstrate->size());
+                else if (fancyLineEditFichier->text().toLower().endsWith(".avi")
                     || fancyLineEditFichier->text().toLower().endsWith(".mp4"))
                 {
                     double fps(spinBoxPeriodeFichier->value());
@@ -767,6 +770,12 @@ void FenetrePrincipale::genererAnnuler()
             delete videoWriter;
             videoWriter = 0;
         }
+        if (gifImage)
+        {
+            gifImage->save(fancyLineEditFichier->text());
+            delete gifImage;
+            gifImage = 0;
+        }
         choixSortie = -1;
         bouclageLance = false;
         boutonGenererAnnuler->setText(tr("Générer"));
@@ -837,6 +846,12 @@ void FenetrePrincipale::substrateTermine()
             videoWriter->release();
             delete videoWriter;
             videoWriter = 0;
+        }
+        else if (gifImage)
+        {
+            gifImage->save(fancyLineEditFichier->text());
+            delete gifImage;
+            gifImage = 0;
         }
         else
         {
@@ -958,7 +973,9 @@ void FenetrePrincipale::rafraichirImage()
 {
     if (imageSubstrate)
     {
-        if (videoWriter)
+        if (gifImage)
+            gifImage->addFrame(*imageSubstrate, spinBoxPeriodeFichier->value());
+        else if (videoWriter)
         {
             cv::Mat mat(imageSubstrate->height(), imageSubstrate->width(), CV_8UC4, (void*)imageSubstrate->bits(), imageSubstrate->bytesPerLine());
             mat = mat.clone();

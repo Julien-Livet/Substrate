@@ -14,6 +14,8 @@
 
 #include <opencv4/opencv2/opencv.hpp>
 
+#include <qgifimage.h>
+
 #include "FancyLineEdit.h"
 #include "Interpolation.h"
 
@@ -91,6 +93,7 @@ class FenetrePrincipale : public QMainWindow
         int choixSortie;
         bool bouclageLance;
         cv::VideoWriter* videoWriter;
+        QGifImage* gifImage;
 
     private slots:
         void montrerFenetreCouleurs();
